@@ -35,14 +35,26 @@ def login(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_car(request):
-    if request.user.role != 'admin':
-        return Response({"message": "Unauthorized", "status_code": 403})
+    if not request.user.is_authenticated:
+        return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+    # if request.user.role != 'admin':
+    #     return Response({'detail': 'Permission denied. Only admins can add cars.'}, status=status.HTTP_403_FORBIDDEN)
     
-    serializer = CarSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"message": "Car added successfully", "car_id": serializer.data['id'], "status_code": 200})
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    data = request.data
+    car = Car.objects.create(
+        category=data['category'],
+        model=data['model'],
+        number_plate=data['number_plate'],
+        current_city=data['current_city'],
+        rent_per_hr=data['rent_per_hr'],
+        rent_history=data.get('rent_history', [])
+    )
+    return Response({
+        'message': 'Car added successfully',
+        'car_id': car.id,
+        'status_code': 200
+    }, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def get_rides(request):
