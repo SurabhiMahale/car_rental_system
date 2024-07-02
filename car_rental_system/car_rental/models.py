@@ -6,7 +6,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=20, default='user')
     groups = models.ManyToManyField(
         Group,
-        related_name='car_rental_user_set',  # Unique related_name for groups
+        related_name='car_rental_user_set', 
         blank=True,
         help_text=('The groups this user belongs to. A user will get all permissions '
                    'granted to each of their groups.'),
@@ -14,7 +14,7 @@ class User(AbstractUser):
     )
     user_permissions = models.ManyToManyField(
         Permission,
-        related_name='car_rental_user_set',  # Unique related_name for user_permissions
+        related_name='car_rental_user_set',  
         blank=True,
         help_text='Specific permissions for this user.',
         related_query_name='user',

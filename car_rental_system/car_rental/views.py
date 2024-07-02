@@ -25,13 +25,14 @@ def login(request):
                 "status_code": 200,
                 "user_id": user.id,
                 "access_token": str(refresh.access_token),
-                "refresh_token": str(refresh)
+                # "refresh_token": str(refresh)
             })
         else:
             return Response({"status": "Incorrect username/password provided. Please retry", "status_code": 401})
     except User.DoesNotExist:
         return Response({"status": "User not found", "status_code": 404})
 
+# Add new car for renting
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_car(request):
